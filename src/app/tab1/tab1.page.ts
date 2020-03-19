@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../services/api.service";
+import { Router, NavigationExtras } from "@angular/router";
 
 @Component({
   selector: "app-tab1",
@@ -12,7 +13,7 @@ export class Tab1Page implements OnInit {
   public locates: any = null;
   public locatesFiltred: any = null;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit()
   {
@@ -159,4 +160,14 @@ export class Tab1Page implements OnInit {
     var map={"â":"a","Â":"A","à":"a","À":"A","á":"a","Á":"A","ã":"a","Ã":"A","ê":"e","Ê":"E","è":"e","È":"E","é":"e","É":"E","î":"i","Î":"I","ì":"i","Ì":"I","í":"i","Í":"I","õ":"o","Õ":"O","ô":"o","Ô":"O","ò":"o","Ò":"O","ó":"o","Ó":"O","ü":"u","Ü":"U","û":"u","Û":"U","ú":"u","Ú":"U","ù":"u","Ù":"U","ç":"c","Ç":"C"};
     return string.replace(/[\W\[\] ]/g,function(a){return map[a]||a})    
   }    
+
+  openDetails(locate)
+  {
+    let navigation: NavigationExtras = {
+      state: {
+        locate: locate
+      }
+    }
+    this.router.navigate(['detail'], navigation)
+  }
 }

@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 })
 export class ApiService {
 
-  public BASE_URL = "http://localhost:3000";
+  public BASE_URL = "https://api-covid19-php.herokuapp.com/";
 
   constructor(private http: HttpClient) { }
 
