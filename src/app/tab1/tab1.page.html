@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Brasil {{ locates?.date }} {{ locates?.time }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Acesso Rápido -->
+  <ion-searchbar animated placeholder="Acesso Rápido" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
+
+  <!-- Skeleton Text -->
+  <ion-list *ngIf="locatesFiltred == null">
+    <ion-item *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]">
+      <ion-skeleton-text animated style="width: 100%;"></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <!-- Lista de Pesquisa -->
+  <ion-list *ngIf="locatesFiltred != null">
+    <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
+      <i slot="start" class="flag-icon flag-icon-br"></i>
+      <ion-label class="ion-text-justify ion-text-wrap">
+        {{ locate.name }}    
+      </ion-label>
+      <ion-badge color="warning" slot="end">{{ locate.suspects }}</ion-badge>
+      <ion-badge color="success" slot="end">{{ locate.refuses }}</ion-badge>
+      <ion-badge color="danger" slot="end">{{ locate.cases }}</ion-badge>
+      <ion-badge color="dark" slot="end">{{ locate.deaths }}</ion-badge>
+    </ion-item>
+  </ion-list>
+</ion-content>
