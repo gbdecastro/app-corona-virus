@@ -12,7 +12,7 @@ export class StorageService {
 
   async loadData()
   {
-    await this.api.getBrazil()
+    return this.api.getBrazil()
       .subscribe(
         (data)=>{
           this.storage.set("brazil",data);

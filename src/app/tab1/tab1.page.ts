@@ -13,7 +13,10 @@ export class Tab1Page implements OnInit {
   locates: any = null;
   locatesFiltred: any = null;
 
-  constructor(private storage: StorageService, private router: Router, private alert: AlertController) {}
+  constructor(
+    private storage: StorageService,
+    private router: Router, 
+    private alert: AlertController) {}
 
   ngOnInit()
   {
