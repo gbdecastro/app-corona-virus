@@ -59,7 +59,6 @@ export class DetailPage implements OnInit {
     HighCharts.chart("barChart", {
       chart: {
         type: "bar",
-        height: h,
         width: w
       },
       title: {
@@ -128,7 +127,8 @@ export class DetailPage implements OnInit {
 
     HighCharts.chart("barChart2", {
       chart: {
-        type: "bar"
+        type: "bar",
+        width: w
       },
       title: {
         text: "Relação entre Confirmados e Mortes"
