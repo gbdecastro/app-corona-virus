@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { StorageService } from "../services/storage.service";
+import { ApiService } from "../services/api.service";
 import { Router, NavigationExtras } from "@angular/router";
 import { AlertController } from '@ionic/angular';
 
@@ -15,6 +16,7 @@ export class Tab1Page implements OnInit {
 
   constructor(
     private storage: StorageService,
+    private api: ApiService,
     private router: Router, 
     private alert: AlertController) {}
 
@@ -28,140 +30,22 @@ export class Tab1Page implements OnInit {
 
     atualizandoAlert.then((a) => a.present())
 
-    this.storage.loadData()
-      .then(()=>{
-        atualizandoAlert.then((a) => a.dismiss())
-        this.getLocates()
+    this.api.getBrazil()
+      .then(response => {
+        if(response){
+          this.getLocates()
+        }
       })
-      .catch(()=>{
-        atualizandoAlert.then((a) => a.dismiss())
-      })
+
   }
 
   getLocates()
   {
-    this.storage.get("brazil")
-      .then(
-        (data:any) => {
-
-          if(data != null){
-            data.values.forEach(state => {
-              switch (state.uid) {
-                case 13:
-                  state.name = 'Amazonas';
-                  break;
-                case 11:
-                  state.name = 'Rondonia';
-                  break;
-                case 12:
-                  state.name = 'Acre';
-                  break;
-                case 14:
-                  state.name = 'Roraima';
-                  break;
-                case 15:
-                  state.name = 'Pará';
-                  break;
-                case 16:
-                  state.name = 'Amapá';
-                  break;
-                case 17:
-                  state.name = 'Tocatins';
-                  break;
-                case 21:
-                  state.name = 'Maranhão';
-                  break;
-                case 22:
-                  state.name = 'Piauí';
-                  break;
-                case 23:
-                  state.name = 'Ceará';
-                  break;
-                case 24:
-                  state.name = 'Rio Grande do Norte';
-                  break;
-                case 25:
-                  state.name = 'Paraíba';
-                  break;
-                case 26:
-                  state.name = 'Pernanbuco';
-                  break;
-                case 27:
-                  state.name = 'Alagoas';
-                  break;
-                case 28:
-                  state.name = 'Sergipe';
-                  break;
-                case 29:
-                  state.name = 'Bahia';
-                  break;
-                case 31:
-                  state.name = 'Minas Gerais';
-                  break;
-                case 32:
-                  state.name = 'Espírito Santo';
-                  break;
-                case 33:
-                  state.name = 'Rio de Janeiro';
-                  break;
-                case 35:
-                  state.name = 'São Paulo';
-                  break;
-                case 41:
-                  state.name = 'Paraná';
-                  break;
-                case 42:
-                  state.name = 'Santa Catarina';
-                  break;
-                case 43:
-                  state.name = 'Rio Grande do Sul';
-                  break;
-                case 50:
-                  state.name = 'Mato Grosso do Sul';
-                  break;
-                case 51:
-                  state.name = 'Mato Grosso';
-                  break;
-                case 52:
-                  state.name = 'Goiás';
-                  break;
-                case 53:
-                  state.name = 'Distrito Federal';
-                  break;
-              }
-              if(!state.hasOwnProperty('deaths')){
-                state.deaths = 0;
-              }
-      
-              if(!state.hasOwnProperty('cases')){
-                state.cases = 0;
-              }    
-              
-              if(!state.hasOwnProperty('suspects')){
-                state.suspects = 0;
-              }   
-      
-              if(!state.hasOwnProperty('refuses')){
-                state.refuses = 0;
-              }                
-            });
-  
-            data.values.sort(function(a,b) {
-              if(a.name < b.name) { return -1 }
-              if(a.name > b.name) { return 1 }
-            })          
-  
-            this.locates = data
-            this.locatesFiltred = data.values
-          }else{
-            this.alert.create({
-              header: "Atenção",
-              message: "É necessário conexão com Internet",
-              buttons: ['OK']
-            }).then((a)=>{ a.present() })            
-          }
-        }
-      )
+    this.storage.get('brazil')
+      .then((storage)=>{
+        this.locates = storage
+        this.locatesFiltred = this.locates
+      })
   } 
 
   clearLocates() {
