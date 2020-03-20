@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ApiService } from "../services/api.service";
+import { StorageService } from "../services/storage.service";
 import { Router, NavigationExtras } from "@angular/router";
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: "app-tab1",
@@ -9,133 +10,164 @@ import { Router, NavigationExtras } from "@angular/router";
 })
 
 export class Tab1Page implements OnInit {
-  public searching: Boolean = false;
-  public locates: any = null;
-  public locatesFiltred: any = null;
+  locates: any = null;
+  locatesFiltred: any = null;
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private storage: StorageService, private router: Router, private alert: AlertController) {}
 
   ngOnInit()
   {
-    this.getLocates();
+    let atualizandoAlert = this.alert.create({
+      backdropDismiss: false,
+      message: "Atualizando Dados...",
+      keyboardClose: false
+    })
+
+    atualizandoAlert.then((a) => a.present())
+
+    this.storage.loadData()
+      .then(()=>{
+        atualizandoAlert.then((a) => a.dismiss())
+        this.getLocates()
+      })
+      .catch(()=>{
+        atualizandoAlert.then((a) => a.dismiss())
+      })
   }
 
   getLocates()
   {
-
-    this.api.getBrazil()
-      .subscribe(
+    this.storage.get("brazil")
+      .then(
         (data:any) => {
 
-          data.values.forEach(state => {
-            switch (state.uid) {
-              case 13:
-                state.name = 'Amazonas';
-                break;
-              case 11:
-                state.name = 'Rondonia';
-                break;
-              case 12:
-                state.name = 'Acre';
-                break;
-              case 14:
-                state.name = 'Roraima';
-                break;
-              case 15:
-                state.name = 'Pará';
-                break;
-              case 16:
-                state.name = 'Amapá';
-                break;
-              case 17:
-                state.name = 'Tocatins';
-                break;
-              case 21:
-                state.name = 'Maranhão';
-                break;
-              case 22:
-                state.name = 'Piauí';
-                break;
-              case 23:
-                state.name = 'Ceará';
-                break;
-              case 24:
-                state.name = 'Rio Grande do Norte';
-                break;
-              case 25:
-                state.name = 'Paraíba';
-                break;
-              case 26:
-                state.name = 'Pernanbuco';
-                break;
-              case 27:
-                state.name = 'Alagoas';
-                break;
-              case 28:
-                state.name = 'Sergipe';
-                break;
-              case 29:
-                state.name = 'Bahia';
-                break;
-              case 31:
-                state.name = 'Minas Gerais';
-                break;
-              case 32:
-                state.name = 'Espírito Santo';
-                break;
-              case 33:
-                state.name = 'Rio de Janeiro';
-                break;
-              case 35:
-                state.name = 'São Paulo';
-                break;
-              case 41:
-                state.name = 'Paraná';
-                break;
-              case 42:
-                state.name = 'Santa Catarina';
-                break;
-              case 43:
-                state.name = 'Rio Grande do Sul';
-                break;
-              case 50:
-                state.name = 'Mato Grosso do Sul';
-                break;
-              case 51:
-                state.name = 'Mato Grosso';
-                break;
-              case 52:
-                state.name = 'Goiás';
-                break;
-              case 53:
-                state.name = 'Distrito Federal';
-                break;
-            }
-          });
-
-          data.values.sort(function(a,b) {
-            if(a.name < b.name) { return -1 }
-            if(a.name > b.name) { return 1 }
-          })          
-
-          this.locates = data
-          this.locatesFiltred = data.values
+          if(data != null){
+            data.values.forEach(state => {
+              switch (state.uid) {
+                case 13:
+                  state.name = 'Amazonas';
+                  break;
+                case 11:
+                  state.name = 'Rondonia';
+                  break;
+                case 12:
+                  state.name = 'Acre';
+                  break;
+                case 14:
+                  state.name = 'Roraima';
+                  break;
+                case 15:
+                  state.name = 'Pará';
+                  break;
+                case 16:
+                  state.name = 'Amapá';
+                  break;
+                case 17:
+                  state.name = 'Tocatins';
+                  break;
+                case 21:
+                  state.name = 'Maranhão';
+                  break;
+                case 22:
+                  state.name = 'Piauí';
+                  break;
+                case 23:
+                  state.name = 'Ceará';
+                  break;
+                case 24:
+                  state.name = 'Rio Grande do Norte';
+                  break;
+                case 25:
+                  state.name = 'Paraíba';
+                  break;
+                case 26:
+                  state.name = 'Pernanbuco';
+                  break;
+                case 27:
+                  state.name = 'Alagoas';
+                  break;
+                case 28:
+                  state.name = 'Sergipe';
+                  break;
+                case 29:
+                  state.name = 'Bahia';
+                  break;
+                case 31:
+                  state.name = 'Minas Gerais';
+                  break;
+                case 32:
+                  state.name = 'Espírito Santo';
+                  break;
+                case 33:
+                  state.name = 'Rio de Janeiro';
+                  break;
+                case 35:
+                  state.name = 'São Paulo';
+                  break;
+                case 41:
+                  state.name = 'Paraná';
+                  break;
+                case 42:
+                  state.name = 'Santa Catarina';
+                  break;
+                case 43:
+                  state.name = 'Rio Grande do Sul';
+                  break;
+                case 50:
+                  state.name = 'Mato Grosso do Sul';
+                  break;
+                case 51:
+                  state.name = 'Mato Grosso';
+                  break;
+                case 52:
+                  state.name = 'Goiás';
+                  break;
+                case 53:
+                  state.name = 'Distrito Federal';
+                  break;
+              }
+              if(!state.hasOwnProperty('deaths')){
+                state.deaths = 0;
+              }
+      
+              if(!state.hasOwnProperty('cases')){
+                state.cases = 0;
+              }    
+              
+              if(!state.hasOwnProperty('suspects')){
+                state.suspects = 0;
+              }   
+      
+              if(!state.hasOwnProperty('refuses')){
+                state.refuses = 0;
+              }                
+            });
+  
+            data.values.sort(function(a,b) {
+              if(a.name < b.name) { return -1 }
+              if(a.name > b.name) { return 1 }
+            })          
+  
+            this.locates = data
+            this.locatesFiltred = data.values
+          }else{
+            this.alert.create({
+              header: "Atenção",
+              message: "É necessário conexão com Internet",
+              buttons: ['OK']
+            }).then((a)=>{ a.present() })            
+          }
         }
       )
-  }
-
-  readLocate()
-  {
-    return this.locates
-  }
+  } 
 
   clearLocates() {
-    this.searching = false;
+    this.locatesFiltred = null;
     this.getLocates()
   }
 
   searchLocates(ev: any) {
-    this.searching = true;
+    this.locatesFiltred = null;
 
     if(ev.target.value != ''){
       let locates = []
@@ -153,7 +185,7 @@ export class Tab1Page implements OnInit {
     }else{
       this.locatesFiltred = this.locates.values
     }
-    this.searching = false
+    this.locatesFiltred = null
   }
 
   removeAcentos(string){
@@ -165,9 +197,10 @@ export class Tab1Page implements OnInit {
   {
     let navigation: NavigationExtras = {
       state: {
-        locate: locate
+        locate: locate,
+        type: 'brazil'
       }
     }
-    this.router.navigate(['detail'], navigation)
+    this.router.navigateByUrl('detail',navigation)
   }
 }
