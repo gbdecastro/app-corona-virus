@@ -56,7 +56,7 @@ export class WorldPage implements OnInit {
         }
       },
       legend: {
-        enabled: true
+        enabled: false
       },
       plotOptions: {
         series: {
@@ -71,7 +71,7 @@ export class WorldPage implements OnInit {
       responsive: {
         rules: [{
           condition: {
-            maxWidth: 150
+            maxWidth: w
           },
         }]
       },
@@ -91,7 +91,7 @@ export class WorldPage implements OnInit {
         {
           type: undefined,
           name: "Recuperados Confirmadas",
-          color: '#222428',
+          color: '#2dd36f',
           data: [(this.locate.attributes.Recovered * 100) / this.locate.attributes.Confirmed]
         },   
         {

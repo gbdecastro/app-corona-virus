@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from "../services/api.service";
 import { StorageService } from "../services/storage.service";
 import { Router, NavigationExtras } from "@angular/router";
-import { AlertController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
     selector: 'app-tab2',
@@ -14,16 +14,14 @@ export class Tab2Page implements OnInit {
     locates: any = null;
     locatesFiltred: any = null;
 
-    constructor(private storage: StorageService, private api: ApiService, private router: Router, private alert: AlertController) { }
+    constructor(private storage: StorageService, private api: ApiService, private router: Router, private loading: LoadingController) { }
 
     ngOnInit() {
-        let atualizandoAlert = this.alert.create({
-            backdropDismiss: false,
+        let load = this.loading.create({
             message: "Atualizando Dados...",
-            keyboardClose: false
         })
 
-        atualizandoAlert.then((a) => a.present())
+        load.then((a) => a.present())
 
         this.api.getWorld()
         .finally(()=>{
@@ -37,8 +35,7 @@ export class Tab2Page implements OnInit {
             .then((storage) => {
                 this.locates = storage
                 this.locatesFiltred = this.locates
-                this.alert.dismiss()
-
+                this.loading.dismiss()
             })
     }
 

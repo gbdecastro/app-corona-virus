@@ -55,7 +55,7 @@ export class BrazilPage implements OnInit {
         }
       },
       legend: {
-        enabled: true
+        enabled: false
       },
       plotOptions: {
         series: {
@@ -70,7 +70,7 @@ export class BrazilPage implements OnInit {
       responsive: {
         rules: [{
           condition: {
-            maxWidth: 150
+            maxWidth: w
           },
         }]
       },
@@ -112,7 +112,7 @@ export class BrazilPage implements OnInit {
         }
       },
       legend: {
-        enabled: true
+        enabled: false
       },
       plotOptions: {
         series: {
@@ -127,7 +127,7 @@ export class BrazilPage implements OnInit {
       responsive: {
         rules: [{
           condition: {
-            maxWidth: 150
+            maxWidth: w
           },
         }]
       },
