@@ -45,6 +45,8 @@ export class Tab1Page implements OnInit {
       .then((storage)=>{
         this.locates = storage
         this.locatesFiltred = this.locates
+        this.alert.dismiss()
+
       })
   } 
 
@@ -54,12 +56,15 @@ export class Tab1Page implements OnInit {
   }
 
   searchLocates(ev: any) {
-    this.locatesFiltred = null;
-
     if(ev.target.value != ''){
       let locates = []
       this.locatesFiltred.forEach((locate)=>{
-        if(this.removeAcentos(locate.name).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1){
+        if(this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+          ||
+          (
+            locate.properties.hasOwnProperty('regiao') &&
+            this.removeAcentos(locate.properties.regiao).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+          )){
           locates.push(locate)
         }
       })
@@ -67,12 +72,11 @@ export class Tab1Page implements OnInit {
       if(locates.length > 0)
         this.locatesFiltred = locates
       else
-        this.locatesFiltred = this.locates.values 
+        this.locatesFiltred = this.locates 
 
     }else{
-      this.locatesFiltred = this.locates.values
+      this.locatesFiltred = this.locates
     }
-    this.locatesFiltred = null
   }
 
   removeAcentos(string){
@@ -88,6 +92,6 @@ export class Tab1Page implements OnInit {
         type: 'brazil'
       }
     }
-    this.router.navigateByUrl('detail',navigation)
+    this.router.navigateByUrl('detail/brazil',navigation)
   }
 }

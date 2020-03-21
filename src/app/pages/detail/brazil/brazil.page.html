@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title slot="start">{{ locate.properties.estado_geo }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button ion-button (click)="setRouter()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card color="warning">
+          <ion-card-header>
+            <ion-card-subtitle>Casos Suspeitos</ion-card-subtitle>
+            <ion-card-title>{{ locate.properties.casossuspeitos }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="success">
+          <ion-card-header>
+            <ion-card-subtitle>Casos Descartados</ion-card-subtitle>
+            <ion-card-title>{{ locate.properties.casosdescartados }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>        
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="danger">
+          <ion-card-header>
+            <ion-card-subtitle>Casos Confirmados</ion-card-subtitle>
+            <ion-card-title>{{ locate.properties.casosconfirmados }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="dark">
+          <ion-card-header>
+            <ion-card-subtitle>Mortes Confirmadas</ion-card-subtitle>
+            <ion-card-title>{{ locate.properties.obitos }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>        
+      </ion-col>      
+      <ion-col size-sm="12">
+        <div id="barChart"></div>
+      </ion-col>      
+      <ion-col size="12">
+        <div id="barChart2"></div>
+      </ion-col>        
+    </ion-row>
+  </ion-grid>
+</ion-content>

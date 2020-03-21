@@ -1,14 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Brasil {{ locates?.date }} {{ locates?.time }}
+      Brasil
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <!-- Acesso Rápido -->
-  <ion-searchbar animated placeholder="Acesso Rápido" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
+  <ion-searchbar animated placeholder="SUDESTE, Rio de Janeiro, RJ" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
 
   <!-- Skeleton Text -->
   <ion-list *ngIf="locatesFiltred == null">
@@ -20,14 +20,19 @@
   <!-- Lista de Pesquisa -->
   <ion-list *ngIf="locatesFiltred != null">
     <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
-      <i slot="start" class="flag-icon flag-icon-br"></i>
-      <ion-label class="ion-text-justify ion-text-wrap">
-        {{ locate.name }}    
+      <ion-icon slot="start" name="pricetags-outline" *ngIf="locate.properties.local == '-'"></ion-icon>
+      <i slot="start" class="flag-icon flag-icon-br" *ngIf="locate.properties.local != '-'"></i>
+      
+      <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local == '-'">
+        {{ locate.properties.estado_geo.toUpperCase() }}    
       </ion-label>
-      <ion-badge color="warning" slot="end">{{ locate.suspects }}</ion-badge>
-      <ion-badge color="success" slot="end">{{ locate.refuses }}</ion-badge>
-      <ion-badge color="danger" slot="end">{{ locate.cases }}</ion-badge>
-      <ion-badge color="dark" slot="end">{{ locate.deaths }}</ion-badge>
+      <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local != '-'">
+        {{ locate.properties.estado_geo }}    
+      </ion-label>      
+      <ion-badge color="warning" slot="end">{{ locate.properties.casossuspeitos }}</ion-badge>
+      <ion-badge color="success" slot="end">{{ locate.properties.casosdescartados }}</ion-badge>
+      <ion-badge color="danger" slot="end">{{ locate.properties.casosconfirmados }}</ion-badge>
+      <ion-badge color="dark" slot="end">{{ locate.properties.obitos }}</ion-badge>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -39,6 +39,7 @@ export class Tab2Page implements OnInit {
             .then((storage) => {
                 this.locates = storage
                 this.locatesFiltred = this.locates
+                this.alert.dismiss()
             })
     }
 
