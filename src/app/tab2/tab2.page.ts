@@ -40,10 +40,12 @@ export class Tab2Page implements OnInit {
                 this.locates = storage
                 this.locatesFiltred = this.locates
                 this.alert.dismiss()
+
             })
     }
 
     clearLocates() {
+        this.locatesFiltred = null;
         this.getLocates()
     }
 
@@ -51,20 +53,21 @@ export class Tab2Page implements OnInit {
         if (ev.target.value != '') {
             let locates = []
             this.locatesFiltred.forEach((locate) => {
-                if (!locate.hasOwnProperty('name')) {
-                    if (this.removeAcentos(locate.name).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1) {
-                        locates.push(locate)
-                    }
+                if (this.removeAcentos(locate.attributes.Country_Region).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+                    ||
+                    (locate.attributes.Province_State != null && this.removeAcentos(locate.attributes.Province_State).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1)
+                ) {
+                    locates.push(locate)
                 }
             })
 
             if (locates.length > 0)
                 this.locatesFiltred = locates
             else
-                this.locatesFiltred = this.locates.values
+                this.locatesFiltred = this.locates
 
         } else {
-            this.locatesFiltred = this.locates.values
+            this.locatesFiltred = this.locates
         }
     }
 
@@ -77,9 +80,8 @@ export class Tab2Page implements OnInit {
         let navigation: NavigationExtras = {
             state: {
                 locate: locate,
-                type: 'world'
             }
         }
-        this.router.navigate(['detail'], navigation)
+        this.router.navigateByUrl('detail/world', navigation)
     }
 }

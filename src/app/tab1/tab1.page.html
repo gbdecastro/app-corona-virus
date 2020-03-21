@@ -22,12 +22,11 @@
     <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
       <ion-icon slot="start" name="pricetags-outline" *ngIf="locate.properties.local == '-'"></ion-icon>
       <i slot="start" class="flag-icon flag-icon-br" *ngIf="locate.properties.local != '-'"></i>
-      
       <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local == '-'">
         {{ locate.properties.estado_geo.toUpperCase() }}    
       </ion-label>
       <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local != '-'">
-        {{ locate.properties.estado_geo }}    
+        {{ locate.properties.estado_geo }}
       </ion-label>      
       <ion-badge color="warning" slot="end">{{ locate.properties.casossuspeitos }}</ion-badge>
       <ion-badge color="success" slot="end">{{ locate.properties.casosdescartados }}</ion-badge>

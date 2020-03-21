@@ -67,7 +67,7 @@ export class ApiService {
 
   getWorld() {
     return new Promise(resolve => {
-      this.http.get(this.BASE_URL + "/api/data/world")
+      this.http.get(this.BASE_URL + "api/data/world")
         .subscribe(
           (data: any) => {
             data.sort(function (a, b) {

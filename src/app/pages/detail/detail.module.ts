@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { DetailPageRoutingModule } from './detail-routing.module';
 
-import { DetailPage } from './detail.page';
 
 @NgModule({
   imports: [
@@ -15,6 +14,5 @@ import { DetailPage } from './detail.page';
     IonicModule,
     DetailPageRoutingModule
   ],
-  declarations: [DetailPage]
 })
 export class DetailPageModule {}

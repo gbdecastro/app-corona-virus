@@ -21,8 +21,10 @@
   <ion-list *ngIf="locatesFiltred != null">
     <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
       <i slot="start" [ngClass]="'flag-icon flag-icon-'"></i>
+      
       <ion-label class="ion-text-justify ion-text-wrap">
-        {{ locate.attributes.Country_Region }}    
+        <h2>{{ locate.attributes.Country_Region }}</h2>
+        <p>{{ locate.attributes.Province_State }} </p>
       </ion-label>
       <ion-badge color="success" slot="end">{{ locate.attributes.Recovered }}</ion-badge>
       <ion-badge color="danger" slot="end">{{ locate.attributes.Confirmed }}</ion-badge>

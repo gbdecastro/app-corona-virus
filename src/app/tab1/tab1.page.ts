@@ -88,8 +88,7 @@ export class Tab1Page implements OnInit {
   {
     let navigation: NavigationExtras = {
       state: {
-        locate: locate,
-        type: 'brazil'
+        locate: locate
       }
     }
     this.router.navigateByUrl('detail/brazil',navigation)
