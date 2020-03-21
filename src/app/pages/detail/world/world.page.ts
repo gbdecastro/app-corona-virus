@@ -32,7 +32,7 @@ export class WorldPage implements OnInit {
 
   loadCharts() {
 
-    const w = this.platform.width() - 15
+    const w = this.platform.width() - 30
 
     HighCharts.chart("barChart", {
       chart: {

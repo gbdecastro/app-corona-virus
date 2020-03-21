@@ -20,7 +20,7 @@
   <!-- Lista de Pesquisa -->
   <ion-list *ngIf="locatesFiltred != null">
     <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
-      <i slot="start" [ngClass]="'flag-icon flag-icon-'"></i>
+      <i slot="start" [ngClass]="'flag-icon flag-icon-' + locate.attributes.Country_Initials"></i>
       
       <ion-label class="ion-text-justify ion-text-wrap">
         <h2>{{ locate.attributes.Country_Region }}</h2>

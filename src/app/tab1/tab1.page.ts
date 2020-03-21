@@ -31,11 +31,9 @@ export class Tab1Page implements OnInit {
     atualizandoAlert.then((a) => a.present())
 
     this.api.getBrazil()
-      .then(response => {
-        if(response){
-          this.getLocates()
-        }
-      })
+    .finally(()=>{
+      this.getLocates()
+    })
 
   }
 
@@ -46,7 +44,6 @@ export class Tab1Page implements OnInit {
         this.locates = storage
         this.locatesFiltred = this.locates
         this.alert.dismiss()
-
       })
   } 
 

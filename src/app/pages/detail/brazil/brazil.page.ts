@@ -31,8 +31,7 @@ export class BrazilPage implements OnInit {
 
   loadCharts() {
 
-    const h = this.platform.height() - 15
-    const w = this.platform.width() - 15
+    const w = this.platform.width() - 30
 
     HighCharts.chart("barChart", {
       chart: {

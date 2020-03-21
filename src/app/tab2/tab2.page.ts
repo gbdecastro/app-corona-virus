@@ -26,11 +26,9 @@ export class Tab2Page implements OnInit {
         atualizandoAlert.then((a) => a.present())
 
         this.api.getWorld()
-            .then(response => {
-                if (response) {
-                    this.getLocates()
-                }
-            })
+        .finally(()=>{
+            this.getLocates()
+        })        
 
     }
 
