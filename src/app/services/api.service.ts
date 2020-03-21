@@ -41,7 +41,12 @@ export class ApiService {
                 state.forEach(s => {
                   casosconfirmados += s.properties.casosconfirmados
                 })
-                e.properties.casosconfirmados = casosconfirmados
+
+                if(e.properties.estado_geo == "Brasil")
+                  e.properties.casosconfirmados = e.properties.casosconfirmados
+                else
+                  e.properties.casosconfirmados = casosconfirmados
+
                 organizate.push(e)
 
                 state.forEach(s => {
