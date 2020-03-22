@@ -40,7 +40,7 @@ export class WorldPage implements OnInit {
         width: w
       },
       title: {
-        text: "Relação entre Confirmados x Mortes x Recuperados"
+        text: "Confirmados x Mortes x Recuperados"
       },
       xAxis: {
         visible: false,
