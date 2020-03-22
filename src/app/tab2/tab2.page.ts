@@ -24,9 +24,14 @@ export class Tab2Page implements OnInit {
         load.then((a) => a.present())
 
         this.api.getWorld()
-        .finally(()=>{
-            this.getLocates()
-        })        
+            .then((resp: any) => {
+                resp.finally(() => {
+                    this.getLocates()
+                })
+            })
+            .catch(() => {
+                this.getLocates()
+            })
 
     }
 

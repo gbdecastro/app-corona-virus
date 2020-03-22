@@ -10,7 +10,7 @@ export class StorageService {
 
   set(keyName:string,data:any)
   {
-    this.storage.set(keyName,data);
+    return this.storage.set(keyName,data);
   }
 
   get(string:string)

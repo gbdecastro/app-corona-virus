@@ -60,8 +60,7 @@ export class ApiService {
               }
             });
 
-            this.storage.set("brazil", organizate);
-            resolve(true)
+            resolve(this.storage.set("brazil", organizate))
           },
           (err) => {
             resolve(false)
@@ -333,8 +332,7 @@ export class ApiService {
               if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
               if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
             })
-            this.storage.set("world", data);
-            resolve(true)
+            resolve(this.storage.set("world", data))
           },
           (err: any) => {
             resolve(false)

@@ -17,11 +17,10 @@ export class Tab1Page implements OnInit {
   constructor(
     private storage: StorageService,
     private api: ApiService,
-    private router: Router, 
-    private loading: LoadingController) {}
+    private router: Router,
+    private loading: LoadingController) { }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     let load = this.loading.create({
       message: "Atualizando Dados..."
     })
@@ -29,21 +28,28 @@ export class Tab1Page implements OnInit {
     load.then((a) => a.present())
 
     this.api.getBrazil()
-    .finally(()=>{
-      this.getLocates()
-    })
+      .then((resp: any) => {
+        resp.finally(() => {
+          this.getLocates()
+        })
+      })
+      .catch(() => {
+        this.getLocates()
+      })
 
   }
 
-  getLocates()
-  {
+  getLocates() {
     this.storage.get('brazil')
-      .then((storage)=>{
+      .then((storage) => {
         this.locates = storage
         this.locatesFiltred = this.locates
         this.loading.dismiss()
       })
-  } 
+      .finally(() => {
+        console.log(this.locatesFiltred)
+      })
+  }
 
   clearLocates() {
     this.locatesFiltred = null;
@@ -51,41 +57,40 @@ export class Tab1Page implements OnInit {
   }
 
   searchLocates(ev: any) {
-    if(ev.target.value != ''){
+    if (ev.target.value != '') {
       let locates = []
-      this.locatesFiltred.forEach((locate)=>{
-        if(this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+      this.locatesFiltred.forEach((locate) => {
+        if (this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
           ||
           (
             locate.properties.hasOwnProperty('regiao') &&
             this.removeAcentos(locate.properties.regiao).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
-          )){
+          )) {
           locates.push(locate)
         }
       })
 
-      if(locates.length > 0)
+      if (locates.length > 0)
         this.locatesFiltred = locates
       else
-        this.locatesFiltred = this.locates 
+        this.locatesFiltred = this.locates
 
-    }else{
+    } else {
       this.locatesFiltred = this.locates
     }
   }
 
-  removeAcentos(string){
-    var map={"â":"a","Â":"A","à":"a","À":"A","á":"a","Á":"A","ã":"a","Ã":"A","ê":"e","Ê":"E","è":"e","È":"E","é":"e","É":"E","î":"i","Î":"I","ì":"i","Ì":"I","í":"i","Í":"I","õ":"o","Õ":"O","ô":"o","Ô":"O","ò":"o","Ò":"O","ó":"o","Ó":"O","ü":"u","Ü":"U","û":"u","Û":"U","ú":"u","Ú":"U","ù":"u","Ù":"U","ç":"c","Ç":"C"};
-    return string.replace(/[\W\[\] ]/g,function(a){return map[a]||a})    
-  }    
+  removeAcentos(string) {
+    var map = { "â": "a", "Â": "A", "à": "a", "À": "A", "á": "a", "Á": "A", "ã": "a", "Ã": "A", "ê": "e", "Ê": "E", "è": "e", "È": "E", "é": "e", "É": "E", "î": "i", "Î": "I", "ì": "i", "Ì": "I", "í": "i", "Í": "I", "õ": "o", "Õ": "O", "ô": "o", "Ô": "O", "ò": "o", "Ò": "O", "ó": "o", "Ó": "O", "ü": "u", "Ü": "U", "û": "u", "Û": "U", "ú": "u", "Ú": "U", "ù": "u", "Ù": "U", "ç": "c", "Ç": "C" };
+    return string.replace(/[\W\[\] ]/g, function (a) { return map[a] || a })
+  }
 
-  openDetails(locate)
-  {
+  openDetails(locate) {
     let navigation: NavigationExtras = {
       state: {
         locate: locate
       }
     }
-    this.router.navigateByUrl('detail/brazil',navigation)
+    this.router.navigateByUrl('detail/brazil', navigation)
   }
 }
