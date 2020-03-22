@@ -7,8 +7,35 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="warning">
+          Casos Suspeitos: {{locates?.geral.casossuspeitos}}
+        </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="danger">
+          Casos Confirmados: {{locates?.geral.casosconfirmados}}
+        </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="dark">
+          Mortes Confirmadas: {{locates?.geral.obitos}}
+        </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="success">
+          Casos Descartados: {{locates?.geral.casosdescartados}}
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <!-- Acesso Rápido -->
-  <ion-searchbar animated placeholder="SUDESTE, Rio de Janeiro, RJ" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
+  <ion-searchbar animated placeholder="SUDESTE, Rio de Janeiro, RJ" (ionClear)="clearLocates()"
+    (ionInput)="searchLocates($event)"></ion-searchbar>
 
   <!-- Skeleton Text -->
   <ion-list *ngIf="locatesFiltred == null">
@@ -17,21 +44,53 @@
     </ion-item>
   </ion-list>
 
+  <ion-item lines="none">
+    <ion-icon slot="end" name="funnel-outline" (click)="openSelectOrdenar()"></ion-icon>
+  </ion-item>
+
+  <ion-select [hidden]="true" #selectOrdenar [interfaceOptions]="interfaceOptions" interface="action-sheet" slot="end"
+    value="" okText="Ordenar" cancelText="Cancelar" (ionChange)="sortData($event)">
+
+    <ion-select-option value="casossuspeitos-crescente">Casos Suspeitos crescente</ion-select-option>
+    <ion-select-option value="casossuspeitos-decrescente">Casos Suspeitos decrescente</ion-select-option>
+
+    <ion-select-option value="casosconfirmados-crescente">Casos Confirmados crescente</ion-select-option>
+    <ion-select-option value="casosconfirmados-decrescente">Casos Confirmados decrescente</ion-select-option>
+
+    <ion-select-option value="obitos-crescente">Óbitos crescente</ion-select-option>
+    <ion-select-option value="obitos-decrescente">Óbitos decrescente</ion-select-option>
+
+    <ion-select-option value="casosdescartados-crescente">Casos Descartados crescente</ion-select-option>
+    <ion-select-option value="casosdescartados-decrescente">Casos Descartados decrescente</ion-select-option>
+
+  </ion-select>
+
   <!-- Lista de Pesquisa -->
-  <ion-list *ngIf="locatesFiltred != null">
-    <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
-      <ion-icon slot="start" name="pricetags-outline" *ngIf="locate.properties.local == '-'"></ion-icon>
-      <i slot="start" class="flag-icon flag-icon-br" *ngIf="locate.properties.local != '-'"></i>
-      <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local == '-'">
-        {{ locate.properties.estado_geo.toUpperCase() }}    
-      </ion-label>
-      <ion-label class="ion-text-justify ion-text-wrap" *ngIf="locate.properties.local != '-'">
-        {{ locate.properties.estado_geo }}
-      </ion-label>      
-      <ion-badge color="warning" slot="end">{{ locate.properties.casossuspeitos }}</ion-badge>
-      <ion-badge color="success" slot="end">{{ locate.properties.casosdescartados }}</ion-badge>
-      <ion-badge color="danger" slot="end">{{ locate.properties.casosconfirmados }}</ion-badge>
-      <ion-badge color="dark" slot="end">{{ locate.properties.obitos }}</ion-badge>
-    </ion-item>
+  <ion-list lines="none" *ngIf="locatesFiltred != null">
+
+    <ion-item-group lines="none" *ngFor="let regiao of locatesFiltred" (click)="openDetails(regiao)">
+      <ion-item lines="none">
+        <ion-icon slot="start" name="pricetags-outline"></ion-icon>
+        <ion-label class="ion-text-left ion-text-wrap">
+          {{ regiao.properties.estado_geo.toUpperCase() }}
+        </ion-label>
+        <ion-text class="ion-text-left ion-text-wrap" color="warning" slot="end">{{ regiao.properties.casossuspeitos }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="danger" slot="end">{{ regiao.properties.casosconfirmados }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="dark" slot="end">{{ regiao.properties.obitos }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="success" slot="end">{{ regiao.properties.casosdescartados }}</ion-text>
+      </ion-item>
+
+      <ion-item lines="none" *ngFor="let estado of regiao.estados" (click)="openDetails(estado)">
+        <i slot="start" class="flag-icon flag-icon-br"></i>
+        <ion-label class="ion-text-left ion-text-wrap">
+          {{ estado.properties.estado_geo }}
+        </ion-label>
+        <ion-text class="ion-text-left ion-text-wrap" color="warning" slot="end">{{ estado.properties.casossuspeitos }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="danger" slot="end">{{ estado.properties.casosconfirmados }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="dark" slot="end">{{ estado.properties.obitos }}</ion-text>
+        <ion-text class="ion-text-left ion-text-wrap" color="success" slot="end">{{ estado.properties.casosdescartados }}</ion-text>
+      </ion-item>
+
+    </ion-item-group>
   </ion-list>
 </ion-content>

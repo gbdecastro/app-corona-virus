@@ -7,6 +7,27 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="danger">
+          Casos Confirmados
+        </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="dark">
+          Mortes Confirmadas
+        </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-text class="ion-text-left ion-text-wrap" color="success">
+          Casos Descartados
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <!-- Acesso Rápido -->
   <ion-searchbar animated placeholder="Acesso Rápido" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
 
@@ -17,6 +38,25 @@
     </ion-item>
   </ion-list>
 
+
+  <ion-item lines="none">
+    <ion-icon slot="end" name="funnel-outline" (click)="openSelectOrdenar()"></ion-icon>
+  </ion-item>
+
+  <ion-select [hidden]="true" #selectOrdenar [interfaceOptions]="interfaceOptions" interface="action-sheet" slot="end"
+    value="" okText="Ordenar" cancelText="Cancelar" (ionChange)="sortData($event)">
+
+    <ion-select-option value="Confirmed-crescente">Casos Confirmados crescente</ion-select-option>
+    <ion-select-option value="Confirmed-decrescente">Casos Confirmados decrescente</ion-select-option>
+
+    <ion-select-option value="Deaths-crescente">Óbitos crescente</ion-select-option>
+    <ion-select-option value="Deaths-decrescente">Óbitos decrescente</ion-select-option>
+
+    <ion-select-option value="Recovered-crescente">Casos Descartados crescente</ion-select-option>
+    <ion-select-option value="Recovered-decrescente">Casos Descartados decrescente</ion-select-option>
+
+  </ion-select>  
+
   <!-- Lista de Pesquisa -->
   <ion-list *ngIf="locatesFiltred != null">
     <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
@@ -26,9 +66,9 @@
         <h2>{{ locate.attributes.Country_Region }}</h2>
         <p>{{ locate.attributes.Province_State }} </p>
       </ion-label>
-      <ion-badge color="success" slot="end">{{ locate.attributes.Recovered }}</ion-badge>
       <ion-badge color="danger" slot="end">{{ locate.attributes.Confirmed }}</ion-badge>
       <ion-badge color="dark" slot="end">{{ locate.attributes.Deaths }}</ion-badge>
+      <ion-badge color="success" slot="end">{{ locate.attributes.Recovered }}</ion-badge>
     </ion-item>
   </ion-list>
 </ion-content>

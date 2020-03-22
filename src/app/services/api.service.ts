@@ -33,34 +33,64 @@ export class ApiService {
             let organizate = []
             let state = []
 
+            let brasilcasosconfirmados = 0
+            let brasilcasosdescartados = 0
+            let brasilcasossuspeitos = 0
+            let brasilobitos = 0            
+
             data.forEach(e => {
               if (e.properties.local == "-") {
+                state.sort(function (a, b) {
+                  if (a.properties.estado_geo < b.properties.estado_geo) { return -1 }
+                  if (a.properties.estado_geo > b.properties.estado_geo) { return 1 }
+                })                
 
                 //correçao de calculo da api para casos confirmados por regiao
                 let casosconfirmados = 0
+                let casosdescartados = 0
+                let casossuspeitos = 0
+                let obitos = 0
                 state.forEach(s => {
                   casosconfirmados += s.properties.casosconfirmados
+                  casosdescartados += s.properties.casosdescartados
+                  casossuspeitos += s.properties.casossuspeitos
+                  obitos += s.properties.obitos
+
+                  brasilcasosconfirmados += s.properties.casosconfirmados
+                  brasilcasosdescartados += s.properties.casosdescartados
+                  brasilcasossuspeitos += s.properties.casossuspeitos
+                  brasilobitos += s.properties.obitos                  
                 })
 
-                if(e.properties.estado_geo == "Brasil")
-                  e.properties.casosconfirmados = e.properties.casosconfirmados
-                else
-                  e.properties.casosconfirmados = casosconfirmados
+                //aplicando a Correcao
+                e.properties.casosconfirmados = casosconfirmados
+                e.properties.casosdescartados = casosdescartados
+                e.properties.casossuspeitos = casossuspeitos
+                e.properties.obitos = obitos                
 
-                organizate.push(e)
+                //digo que essa regiao tem esses estados
+                e.estados = state
 
-                state.forEach(s => {
-                  casosconfirmados += s.properties.casosconfirmados
-                  s.properties.regiao = e.properties.estado_geo
-                  organizate.push(s)
-                })
+                if(e.properties.estado_geo != "Brasil")
+                  organizate.push(e)
+
                 state = []
               } else {
                 state.push(e)
               }
             });
 
-            resolve(this.storage.set("brazil", organizate))
+            let response = {
+              geral: {
+                casosconfirmados:brasilcasosconfirmados,
+                casosdescartados:brasilcasosdescartados,
+                casossuspeitos:brasilcasossuspeitos,
+                obitos:brasilobitos
+              },
+              regiao: organizate
+            }
+            console.log(response)
+            resolve(this.storage.set("brazil", response))
           },
           (err) => {
             resolve(false)

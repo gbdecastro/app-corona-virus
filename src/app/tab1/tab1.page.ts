@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild  } from "@angular/core";
 import { StorageService } from "../services/storage.service";
 import { ApiService } from "../services/api.service";
 import { Router, NavigationExtras } from "@angular/router";
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController, IonSelect } from '@ionic/angular';
 
 @Component({
   selector: "app-tab1",
@@ -10,14 +10,22 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ["tab1.page.scss"]
 })
 
+
 export class Tab1Page implements OnInit {
   locates: any = null;
   locatesFiltred: any = null;
+
+  interfaceOptions: any = {
+    header: 'Ordenar por',
+  };
+  
+  @ViewChild('selectOrdenar',null) select : IonSelect;
 
   constructor(
     private storage: StorageService,
     private api: ApiService,
     private router: Router,
+    private alert: AlertController,
     private loading: LoadingController) { }
 
   ngOnInit() {
@@ -29,12 +37,14 @@ export class Tab1Page implements OnInit {
 
     this.api.getBrazil()
       .then((resp: any) => {
-        resp.finally(() => {
+        resp.then(() => {
           this.getLocates()
+          load.then((a) => a.dismiss())
         })
       })
       .catch(() => {
         this.getLocates()
+        load.then((a) => a.dismiss())
       })
 
   }
@@ -42,12 +52,15 @@ export class Tab1Page implements OnInit {
   getLocates() {
     this.storage.get('brazil')
       .then((storage) => {
-        this.locates = storage
-        this.locatesFiltred = this.locates
-        this.loading.dismiss()
-      })
-      .finally(() => {
-        console.log(this.locatesFiltred)
+        if(storage != null){
+          this.locates = storage
+          this.locatesFiltred = storage.regiao
+        }else{
+          this.alert.create({
+            header: "Atenção",
+            message: "Verifique sua conexão com a Internet"
+          }).then(a=> a.present())
+        }
       })
   }
 
@@ -73,10 +86,10 @@ export class Tab1Page implements OnInit {
       if (locates.length > 0)
         this.locatesFiltred = locates
       else
-        this.locatesFiltred = this.locates
+        this.locatesFiltred = this.locates.regiao
 
     } else {
-      this.locatesFiltred = this.locates
+      this.locatesFiltred = this.locates.regiao
     }
   }
 
@@ -92,5 +105,38 @@ export class Tab1Page implements OnInit {
       }
     }
     this.router.navigateByUrl('detail/brazil', navigation)
+  }
+
+  openSelectOrdenar()
+  {
+    this.select.open();
+  }  
+
+  sortData(event: any)
+  {
+    const index = event.target.value.split("-")[0]
+    const order = event.target.value.split("-")[1]
+
+    this.locatesFiltred.sort(function(a,b) {
+      if(order == "crescente"){
+        if (a.properties[index] < b.properties[index]) { return -1 }
+        if (a.properties[index] > b.properties[index]) { return 1 }
+      }else{
+        if (a.properties[index] < b.properties[index]) { return 1 }
+        if (a.properties[index] > b.properties[index]) { return -1 }          
+      }
+    })
+
+    this.locatesFiltred.forEach(regiao => {
+      regiao.estados.sort((a,b)=> {
+        if(order == "crescente"){
+          if (a.properties[index] < b.properties[index]) { return -1 }
+          if (a.properties[index] > b.properties[index]) { return 1 }
+        }else{
+          if (a.properties[index] < b.properties[index]) { return 1 }
+          if (a.properties[index] > b.properties[index]) { return -1 }          
+        }        
+      })
+    });
   }
 }

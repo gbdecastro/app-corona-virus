@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Platform } from "@ionic/angular";
-
 import * as HighCharts from 'highcharts';
+
 @Component({
   selector: 'app-brazil',
   templateUrl: './brazil.page.html',
@@ -39,7 +39,7 @@ export class BrazilPage implements OnInit {
         width: w
       },
       title: {
-        text: "Relação entre Suspeitos x Descartados"
+        text: "Suspeitos x Descartados"
       },
       xAxis: {
         visible: false,
@@ -96,7 +96,7 @@ export class BrazilPage implements OnInit {
         width: w
       },
       title: {
-        text: "Relação entre Confirmados e Mortes"
+        text: "Confirmados x Mortes"
       },
       xAxis: {
         visible: false,
