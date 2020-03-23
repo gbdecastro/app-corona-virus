@@ -78,8 +78,8 @@
 
   <!-- Lista de Pesquisa -->
   <div class="app-list" *ngIf="locatesFiltred != null">
-    <div class="app-list-group" *ngFor="let regiao of locatesFiltred" (click)="openDetails(regiao)">
-      <div class="app-list-header">
+    <div class="app-list-group" *ngFor="let regiao of locatesFiltred">
+      <div class="app-list-header" (click)="openDetails(regiao)">
         <div class="app-list-header-label">
           <ion-icon slot="start" name="pricetags-outline"></ion-icon>
           <span>{{ regiao.properties.estado_geo.toUpperCase() }}</span>
@@ -106,7 +106,7 @@
 
       <!-- sub-itens -->
       <div class="app-list-item" [ngClass]="{'color-f2f2f2': estado.properties.flip}"
-        *ngFor="let estado of regiao.estados">
+        *ngFor="let estado of regiao.estados" (click)="openDetails(estado)">
         <div class="app-list-item-header">
           <div class="icon-flag">
             <i slot="start" class="flag-icon flag-icon-br"></i>
