@@ -368,34 +368,60 @@ export class ApiService {
               recovered += element.attributes.Recovered
             });
 
-            //Ordenar por nome
-            data.sort(function (a, b) {
-              if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
-              if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
-            })
-
-            let prevElement = ""
+            let prevCountry = "Australia"
             let countries = []
+            let provinces = []
 
-            data.forEach(element => {
+            data.forEach((element:any, i) => {
               if(element.attributes.Province_State == null){
-                element.attributes.regiones = []
                 countries.push(element)
               }else{
-                if(prevElement != element.attributes.Country_Region){
-                  countries.push(element)
-                }
-                const position = countries.length - 1
-
-                if(!countries[position].attributes.hasOwnProperty('regiones')){
-                  countries[position].attributes.regiones = []
-                }
-
-                countries[position].attributes.regiones.push(element)
-                prevElement = element.attributes.Country_Region
+                provinces.push(element)
               }
             });
-            
+
+            //Ordenar por nome
+            provinces.sort(function (a, b) {
+              if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
+              if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
+            })            
+
+            let r=0,c=0,d = 0
+            let cr, ci = ''
+            provinces.forEach(p=>{
+              if(prevCountry == p.attributes.Country_Region){
+                r = r + p.attributes.Recovered
+                d = d + p.attributes.Deaths
+                c = c + p.attributes.Confirmed
+                cr = p.attributes.Country_Region
+                ci = p.attributes.Country_Initials
+              }else{
+                countries.push({
+                  attributes: {
+                    Confirmed: c,
+                    Recovered: r,
+                    Deaths: d,
+                    Country_Initials: ci,
+                    Country_Region: cr,
+                  }
+                })
+
+                prevCountry = p.attributes.Country_Region
+                r = 0; c = 0; d = 0;
+
+                r = r + p.attributes.Recovered
+                d = d + p.attributes.Deaths
+                c = c + p.attributes.Confirmed
+                cr = p.attributes.Country_Region
+                ci = p.attributes.Country_Initials                           
+              }
+            })
+
+            countries.sort(function (a, b) {
+              if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
+              if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
+            })               
+
             let response = {
               data: countries,
               general: {

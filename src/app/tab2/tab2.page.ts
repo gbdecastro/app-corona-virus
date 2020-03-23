@@ -27,7 +27,16 @@ export class Tab2Page implements OnInit {
     private alert: AlertController
   ) {}
 
+  doRefresh(event) {
+    this.getInit()
+    event.target.complete();
+  }
+
   ngOnInit() {
+    this.getInit()
+  }
+
+  getInit(){
     let load = this.loading.create({
       message: "Atualizando Dados..."
     });
@@ -52,7 +61,15 @@ export class Tab2Page implements OnInit {
     this.storage.get("world").then(storage => {
       if (storage != null) {
         this.locates = storage;
-        this.locatesFiltred = storage.data;
+        this.locatesFiltred = this.locates.data
+
+        let event =  {
+          target: {
+            value: this.select.value
+          }
+        }
+        this.sortData(event)        
+
       } else {
         this.alert
           .create({
@@ -99,7 +116,7 @@ export class Tab2Page implements OnInit {
       if (locates.length > 0) this.locatesFiltred = locates;
       else this.locatesFiltred = this.locates;
     } else {
-      this.locatesFiltred = this.locates;
+      this.getLocates()
     }
   }
 
@@ -184,4 +201,5 @@ export class Tab2Page implements OnInit {
       }
     });
   }
+  
 }

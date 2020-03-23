@@ -28,7 +28,16 @@ export class Tab1Page implements OnInit {
     private alert: AlertController,
     private loading: LoadingController) { }
 
+  doRefresh(event) {
+    this.getInit()
+    event.target.complete();
+  }
+
   ngOnInit() {
+    this.getInit()
+  }
+
+  getInit(){
     let load = this.loading.create({
       message: "Atualizando Dados..."
     })
@@ -46,7 +55,6 @@ export class Tab1Page implements OnInit {
         this.getLocates()
         load.then((a) => a.dismiss())
       })
-
   }
 
   getLocates() {
@@ -55,6 +63,14 @@ export class Tab1Page implements OnInit {
         if(storage != null){
           this.locates = storage
           this.locatesFiltred = storage.regiao
+
+          let event =  {
+            target: {
+              value: this.select.value
+            }
+          }
+          this.sortData(event)
+          
         }else{
           this.alert.create({
             header: "Atenção",
@@ -85,9 +101,15 @@ export class Tab1Page implements OnInit {
         }
       })
 
-      if (response.length > 0)
+      if (response.length > 0){
         this.locatesFiltred = response.filter((r) => { return r.estados.length > 0 })
-      else
+        let event =  {
+          target: {
+            value: this.select.value
+          }
+        }
+        this.sortData(event)
+      }else
         this.getLocates()
 
     } else {

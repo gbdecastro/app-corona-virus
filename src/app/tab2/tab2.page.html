@@ -88,30 +88,6 @@
           </div>
         </div>
       </div>
-      <div class="app-list-item" *ngFor="let region of country.attributes.regiones">
-        <div class="app-list-item-header">
-          <div class="icon-flag">
-            <ion-icon slot="start" name="pricetags-outline"></ion-icon>
-          </div>
-          <div class="app-label">
-            {{ region.attributes.Province_State }}
-          </div>
-        </div>
-        <div class="app-list-item-total">
-          <div class="col-total">
-            <p>Casos<br>Confirmados</p>
-            <ion-badge class="ion-text-wrap" color="danger">{{ region.attributes.Confirmed.toLocaleString('pt-BR') }}</ion-badge>
-          </div>
-          <div class="col-total">
-            <p>Mortes<br>Confirmadas</p>
-            <ion-badge class="ion-text-wrap" color="dark">{{ region.attributes.Deaths.toLocaleString('pt-BR') }}</ion-badge>
-          </div>
-          <div class="col-total">
-            <p>Casos<br>Recuperados</p>
-            <ion-badge class="ion-text-wrap" color="success">{{ region.attributes.Recovered.toLocaleString('pt-BR') }}</ion-badge>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </ion-content>
