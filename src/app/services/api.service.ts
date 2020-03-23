@@ -89,7 +89,6 @@ export class ApiService {
               },
               regiao: organizate
             }
-            console.log(response)
             resolve(this.storage.set("brazil", response))
           },
           (err) => {
@@ -362,19 +361,43 @@ export class ApiService {
               
             });
 
+            //Calculo de todos os dados
             data.forEach(element => {
               deaths += element.attributes.Deaths
               confirmed += element.attributes.Confirmed
               recovered += element.attributes.Recovered
             });
 
+            //Ordenar por nome
             data.sort(function (a, b) {
               if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
               if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
             })
 
+            let prevElement = ""
+            let countries = []
+
+            data.forEach(element => {
+              if(element.attributes.Province_State == null){
+                element.attributes.regiones = []
+                countries.push(element)
+              }else{
+                if(prevElement != element.attributes.Country_Region){
+                  countries.push(element)
+                }
+                const position = countries.length - 1
+
+                if(!countries[position].attributes.hasOwnProperty('regiones')){
+                  countries[position].attributes.regiones = []
+                }
+
+                countries[position].attributes.regiones.push(element)
+                prevElement = element.attributes.Country_Region
+              }
+            });
+            
             let response = {
-              data: data,
+              data: countries,
               general: {
                 deaths: deaths,
                 recovered: recovered,

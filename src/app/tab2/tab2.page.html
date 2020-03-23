@@ -1,41 +1,40 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Mundo
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-card color="danger">
-          <ion-card-header>
-            <ion-card-subtitle>Casos Confirmados</ion-card-subtitle>
-            <ion-card-title>{{ locates?.general.confirmed.toLocaleString('pt-BR') }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-col>      
-      <ion-col size="6">
-        <ion-card color="success">
-          <ion-card-header>
-            <ion-card-subtitle>Casos Recuperados</ion-card-subtitle>
-            <ion-card-title>{{ locates?.general.recovered.toLocaleString('pt-BR') }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>        
-      </ion-col>
-      <ion-col size="6">
-        <ion-card color="dark">
-          <ion-card-header>
-            <ion-card-subtitle>Mortes Confirmadas</ion-card-subtitle>
-            <ion-card-title>{{ locates?.general.deaths.toLocaleString('pt-BR') }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>        
-      </ion-col>       
-    </ion-row>
-  </ion-grid>
+  <div class="app-painel">
+    <div class="app-painel-header">
+      <img src="../../assets/icon/coronavirus.png" width="64" height="64" />
+      <div class="app-painel-header-title">COVID-19</div>
+    </div>
+    <div class="painel-total">
+      <div class="painel-card painel-card-danger">
+        <div class="painel-content">
+          <ion-icon name="sad-outline" size="large"></ion-icon>
+          <p>
+            Casos<br>Confirmados<br>{{locates?.general.confirmed.toLocaleString('pt-BR')}}
+          </p>
+        </div>
+      </div>
+      <div class="painel-card painel-card-dark">
+        <div class="painel-content">
+          <ion-icon name="skull-outline" size="large"></ion-icon>
+          <p>
+            Mortes<br>Confirmadas<br>{{locates?.general.deaths.toLocaleString('pt-BR')}}
+          </p>
+        </div>
+      </div>
+      <div class="painel-card painel-card-success">
+        <div class="painel-content">
+          <ion-icon name="happy-outline" size="large"></ion-icon>
+          <p>
+            Casos<br>Recuperados<br>{{locates?.general.recovered.toLocaleString('pt-BR')}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Acesso Rápido -->
   <ion-searchbar animated placeholder="Acesso Rápido" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
@@ -67,17 +66,52 @@
   </ion-select>  
 
   <!-- Lista de Pesquisa -->
-  <ion-list *ngIf="locatesFiltred != null">
-    <ion-item *ngFor="let locate of locatesFiltred" (click)="openDetails(locate)">
-      <i slot="start" [ngClass]="'flag-icon flag-icon-' + locate.attributes.Country_Initials"></i>
-      
-      <ion-label class="ion-text-justify ion-text-wrap">
-        <h2>{{ locate.attributes.Country_Region }}</h2>
-        <p>{{ locate.attributes.Province_State }} </p>
-      </ion-label>
-      <ion-text  color="danger" slot="end">{{ locate.attributes.Confirmed }}</ion-text >
-      <ion-text  color="dark" slot="end">{{ locate.attributes.Deaths }}</ion-text >
-      <ion-text  color="success" slot="end">{{ locate.attributes.Recovered }}</ion-text >
-    </ion-item>
-  </ion-list>
+  <div class="app-list" *ngIf="locatesFiltred != null">
+    <div class="app-list-group" *ngFor="let country of locatesFiltred" (click)="openDetails(country)">
+      <div class="app-list-header">
+        <div class="app-list-header-label">
+          <i slot="start" [ngClass]="'flag-icon flag-icon-' + country.attributes.Country_Initials"></i>
+          <span>{{ country.attributes.Country_Region.toUpperCase() }}</span>
+        </div>
+        <div class="app-list-header-total">
+          <div class="col-total">
+            <p>Casos<br>Confirmados</p>
+            <ion-badge class="ion-text-wrap" color="danger">{{ country.attributes.Confirmed.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+          <div class="col-total">
+            <p>Mortes<br>Confirmadas</p>
+            <ion-badge class="ion-text-wrap" color="dark">{{ country.attributes.Deaths.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+          <div class="col-total">
+            <p>Casos<br>Descartados</p>
+            <ion-badge class="ion-text-wrap" color="success">{{ country.attributes.Recovered.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+        </div>
+      </div>
+      <div class="app-list-item" *ngFor="let region of country.attributes.regiones">
+        <div class="app-list-item-header">
+          <div class="icon-flag">
+            <ion-icon slot="start" name="pricetags-outline"></ion-icon>
+          </div>
+          <div class="app-label">
+            {{ region.attributes.Province_State }}
+          </div>
+        </div>
+        <div class="app-list-item-total">
+          <div class="col-total">
+            <p>Casos<br>Confirmados</p>
+            <ion-badge class="ion-text-wrap" color="danger">{{ region.attributes.Confirmed.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+          <div class="col-total">
+            <p>Mortes<br>Confirmadas</p>
+            <ion-badge class="ion-text-wrap" color="dark">{{ region.attributes.Deaths.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+          <div class="col-total">
+            <p>Casos<br>Recuperados</p>
+            <ion-badge class="ion-text-wrap" color="success">{{ region.attributes.Recovered.toLocaleString('pt-BR') }}</ion-badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

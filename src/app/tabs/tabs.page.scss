@@ -1,3 +1,11 @@
 i{
     font-size: 32px;
 }
+
+ion-tab-button i{
+    opacity: 0.7;
+}
+
+ion-tab-button.tab-selected i{
+    opacity: 1;
+}
