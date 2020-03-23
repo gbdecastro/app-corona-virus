@@ -71,25 +71,27 @@ export class Tab1Page implements OnInit {
 
   searchLocates(ev: any) {
     if (ev.target.value != '') {
-      let locates = []
-      this.locatesFiltred.forEach((locate) => {
-        if (this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
-          ||
-          (
-            locate.properties.hasOwnProperty('regiao') &&
-            this.removeAcentos(locate.properties.regiao).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
-          )) {
-          locates.push(locate)
+      let response = []
+      let locates = this.locatesFiltred
+
+      locates.forEach((locate,i) => {
+        if (this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1) {
+          response.push(locate)
+        }else{
+          locate.estados = locate.estados.filter((estado)=>{
+            return this.removeAcentos(estado.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+          })
+          response.push(locate)
         }
       })
 
-      if (locates.length > 0)
-        this.locatesFiltred = locates
+      if (response.length > 0)
+        this.locatesFiltred = response.filter((r) => { return r.estados.length > 0 })
       else
-        this.locatesFiltred = this.locates.regiao
+        this.getLocates()
 
     } else {
-      this.locatesFiltred = this.locates.regiao
+      this.getLocates()
     }
   }
 

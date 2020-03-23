@@ -105,7 +105,11 @@ export class ApiService {
         .subscribe(
           (data: any) => {
 
+            let deaths = 0
+            let confirmed = 0
+            let recovered= 0
 
+            //flags
             data.forEach(e => {
               if(e.attributes.Country_Region.toLowerCase().indexOf(("Afghanistan").toLowerCase()) > -1) e.attributes.Country_Initials = 'AF'.toLowerCase()
               if(e.attributes.Country_Region.toLowerCase().indexOf(("Albania").toLowerCase()) > -1) e.attributes.Country_Initials = 'AL'.toLowerCase()
@@ -358,11 +362,27 @@ export class ApiService {
               
             });
 
+            data.forEach(element => {
+              deaths += element.attributes.Deaths
+              confirmed += element.attributes.Confirmed
+              recovered += element.attributes.Recovered
+            });
+
             data.sort(function (a, b) {
               if (a.attributes.Country_Region < b.attributes.Country_Region) { return -1 }
               if (a.attributes.Country_Region > b.attributes.Country_Region) { return 1 }
             })
-            resolve(this.storage.set("world", data))
+
+            let response = {
+              data: data,
+              general: {
+                deaths: deaths,
+                recovered: recovered,
+                confirmed: confirmed
+              }
+            }
+
+            resolve(this.storage.set("world", response))
           },
           (err: any) => {
             resolve(false)

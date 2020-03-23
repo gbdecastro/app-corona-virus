@@ -12,17 +12,17 @@
     <ion-row>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="danger">
-          Casos Confirmados
+          Casos Confirmados {{ locates?.general.confirmed.toLocaleString('pt-BR') }}
         </ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="dark">
-          Mortes Confirmadas
+          Mortes Confirmadas {{ locates?.general.deaths.toLocaleString('pt-BR') }}
         </ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="success">
-          Casos Descartados
+          Casos Descartados {{ locates?.general.recovered.toLocaleString('pt-BR') }}
         </ion-text>
       </ion-col>
     </ion-row>

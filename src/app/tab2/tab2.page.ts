@@ -14,6 +14,10 @@ export class Tab2Page implements OnInit {
     locates: any = null;
     locatesFiltred: any = null;
 
+    interfaceOptions: any = {
+        header: 'Ordenar por',
+    };
+
     @ViewChild('selectOrdenar', null) select: IonSelect;
 
     constructor(private storage: StorageService, private api: ApiService, private router: Router, private loading: LoadingController, private alert: AlertController, ) { }
@@ -43,7 +47,7 @@ export class Tab2Page implements OnInit {
         this.storage.get('world')
             .then((storage) => {
                 this.locates = storage
-                this.locatesFiltred = this.locates
+                this.locatesFiltred = this.locates.data
             })
     }
 

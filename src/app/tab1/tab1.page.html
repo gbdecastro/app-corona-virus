@@ -12,22 +12,22 @@
     <ion-row>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="warning">
-          Casos Suspeitos: {{locates?.geral.casossuspeitos}}
+          Casos Suspeitos: {{locates?.geral.casossuspeitos.toLocaleString('pt-BR')}}
         </ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="danger">
-          Casos Confirmados: {{locates?.geral.casosconfirmados}}
+          Casos Confirmados: {{locates?.geral.casosconfirmados.toLocaleString('pt-BR')}}
         </ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="dark">
-          Mortes Confirmadas: {{locates?.geral.obitos}}
+          Mortes Confirmadas: {{locates?.geral.obitos.toLocaleString('pt-BR')}}
         </ion-text>
       </ion-col>
       <ion-col size="12">
         <ion-text class="ion-text-left ion-text-wrap" color="success">
-          Casos Descartados: {{locates?.geral.casosdescartados}}
+          Casos Descartados: {{locates?.geral.casosdescartados.toLocaleString('pt-BR')}}
         </ion-text>
       </ion-col>
     </ion-row>
