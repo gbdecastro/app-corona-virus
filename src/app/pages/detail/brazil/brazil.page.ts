@@ -1,60 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Platform } from "@ionic/angular";
-
 import * as HighCharts from 'highcharts';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.page.html',
-  styleUrls: ['./detail.page.scss'],
+  selector: 'app-brazil',
+  templateUrl: './brazil.page.html',
+  styleUrls: ['./brazil.page.scss'],
 })
-export class DetailPage implements OnInit {
+export class BrazilPage implements OnInit {
 
   locate: any;
-  type: any;
 
   constructor(
     private activedRouter: ActivatedRoute,
     private platform: Platform,
     private router: Router) { }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     this.activedRouter.queryParams.subscribe(params => {
-      if(this.router.getCurrentNavigation().extras.state){
+      if (this.router.getCurrentNavigation().extras.state) {
         this.locate = this.router.getCurrentNavigation().extras.state.locate
-        this.type = this.router.getCurrentNavigation().extras.state.type
-
-        if(!this.locate.hasOwnProperty('deaths')){
-          this.locate.deaths = 0;
-        }
-
-        if(!this.locate.hasOwnProperty('cases')){
-          this.locate.cases = 0;
-        }    
-        
-        if(!this.locate.hasOwnProperty('suspects')){
-          this.locate.suspects = 0;
-        }   
-
-        if(!this.locate.hasOwnProperty('refuses')){
-          this.locate.refuses = 0;
-        }              
-
         this.loadCharts()
 
-      }else{
+      } else {
         this.router.navigateByUrl('')
       }
-    }) 
+    })
   }
 
-  loadCharts()
-  {
+  loadCharts() {
 
-    const h = this.platform.height()-15
-    const w = this.platform.width()-15
+    const w = this.platform.width() - 30
 
     HighCharts.chart("barChart", {
       chart: {
@@ -62,7 +39,7 @@ export class DetailPage implements OnInit {
         width: w
       },
       title: {
-        text: "Relação entre Suspeitos x Descartados x Confirmados"
+        text: "Suspeitos x Descartados"
       },
       xAxis: {
         visible: false,
@@ -84,7 +61,7 @@ export class DetailPage implements OnInit {
         series: {
           dataLabels: {
             enabled: true,
-            formatter: function() {
+            formatter: function () {
               return this.y.toFixed(2) + "%";
             }
           }
@@ -93,34 +70,22 @@ export class DetailPage implements OnInit {
       responsive: {
         rules: [{
           condition: {
-            maxWidth: 150
+            maxWidth: w
           },
         }]
-      },         
+      },
       series: [
         {
           type: undefined,
           name: "Casos Suspeitos",
           color: '#ffc409',
-          data: [
-            100 - (
-              ((this.locate.refuses * 100) / this.locate.suspects)
-              +
-              ((this.locate.cases * 100) / this.locate.suspects)
-            )
-          ]
+          data: [this.locate.properties.taxacasossuspeitos]
         },
         {
           type: undefined,
           name: "Casos Descartados",
           color: '#2dd36f',
-          data: [(this.locate.refuses * 100) / this.locate.suspects]
-        },
-        {
-          type: undefined,
-          name: "Casos Confirmados",
-          color: '#eb445a',
-          data: [(this.locate.cases * 100) / this.locate.suspects]
+          data: [this.locate.properties.taxacasosdescartados]
         }
       ]
     });
@@ -131,7 +96,7 @@ export class DetailPage implements OnInit {
         width: w
       },
       title: {
-        text: "Relação entre Confirmados e Mortes"
+        text: "Confirmados x Mortes"
       },
       xAxis: {
         visible: false,
@@ -153,7 +118,7 @@ export class DetailPage implements OnInit {
         series: {
           dataLabels: {
             enabled: true,
-            formatter: function() {
+            formatter: function () {
               return this.y.toFixed(2) + "%";
             }
           }
@@ -162,35 +127,30 @@ export class DetailPage implements OnInit {
       responsive: {
         rules: [{
           condition: {
-            maxWidth: 150
+            maxWidth: w
           },
         }]
-      },        
+      },
       series: [
         {
           type: undefined,
           name: "Casos Confirmados",
           color: '#eb445a',
-          data: [
-            100-((this.locate.deaths * 100) / this.locate.cases)
-          ]
+          data: [100 - ((this.locate.properties.obitos * 100) / this.locate.properties.casosconfirmados)]
         },
         {
           type: undefined,
           name: "Mortes Confirmadas",
           color: '#222428',
-          data: [(this.locate.deaths * 100) / this.locate.cases]
+          data: [((this.locate.properties.obitos * 100) / this.locate.properties.casosconfirmados)]
         }
       ]
-    });    
+    });
 
   }
 
-  setRouter()
-  {
-    if(this.type == 'brazil')
-      this.router.navigateByUrl('tabs/tab1')
-    else
-      this.router.navigateByUrl('tabs/tabs2')
+  setRouter() {
+    this.router.navigateByUrl('tabs/tab1')
   }
+
 }

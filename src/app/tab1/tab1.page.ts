@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild  } from "@angular/core";
 import { StorageService } from "../services/storage.service";
+import { ApiService } from "../services/api.service";
 import { Router, NavigationExtras } from "@angular/router";
-import { AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, IonSelect } from '@ionic/angular';
 
 @Component({
   selector: "app-tab1",
@@ -9,160 +10,59 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ["tab1.page.scss"]
 })
 
+
 export class Tab1Page implements OnInit {
   locates: any = null;
   locatesFiltred: any = null;
 
+  interfaceOptions: any = {
+    header: 'Ordenar por',
+  };
+  
+  @ViewChild('selectOrdenar',null) select : IonSelect;
+
   constructor(
     private storage: StorageService,
-    private router: Router, 
-    private alert: AlertController) {}
+    private api: ApiService,
+    private router: Router,
+    private alert: AlertController,
+    private loading: LoadingController) { }
 
-  ngOnInit()
-  {
-    let atualizandoAlert = this.alert.create({
-      backdropDismiss: false,
-      message: "Atualizando Dados...",
-      keyboardClose: false
+  ngOnInit() {
+    let load = this.loading.create({
+      message: "Atualizando Dados..."
     })
 
-    atualizandoAlert.then((a) => a.present())
+    load.then((a) => a.present())
 
-    this.storage.loadData()
-      .then(()=>{
-        atualizandoAlert.then((a) => a.dismiss())
+    this.api.getBrazil()
+      .then((resp: any) => {
+        resp.then(() => {
+          this.getLocates()
+          load.then((a) => a.dismiss())
+        })
+      })
+      .catch(() => {
         this.getLocates()
+        load.then((a) => a.dismiss())
       })
-      .catch(()=>{
-        atualizandoAlert.then((a) => a.dismiss())
-      })
+
   }
 
-  getLocates()
-  {
-    this.storage.get("brazil")
-      .then(
-        (data:any) => {
-
-          if(data != null){
-            data.values.forEach(state => {
-              switch (state.uid) {
-                case 13:
-                  state.name = 'Amazonas';
-                  break;
-                case 11:
-                  state.name = 'Rondonia';
-                  break;
-                case 12:
-                  state.name = 'Acre';
-                  break;
-                case 14:
-                  state.name = 'Roraima';
-                  break;
-                case 15:
-                  state.name = 'Pará';
-                  break;
-                case 16:
-                  state.name = 'Amapá';
-                  break;
-                case 17:
-                  state.name = 'Tocatins';
-                  break;
-                case 21:
-                  state.name = 'Maranhão';
-                  break;
-                case 22:
-                  state.name = 'Piauí';
-                  break;
-                case 23:
-                  state.name = 'Ceará';
-                  break;
-                case 24:
-                  state.name = 'Rio Grande do Norte';
-                  break;
-                case 25:
-                  state.name = 'Paraíba';
-                  break;
-                case 26:
-                  state.name = 'Pernanbuco';
-                  break;
-                case 27:
-                  state.name = 'Alagoas';
-                  break;
-                case 28:
-                  state.name = 'Sergipe';
-                  break;
-                case 29:
-                  state.name = 'Bahia';
-                  break;
-                case 31:
-                  state.name = 'Minas Gerais';
-                  break;
-                case 32:
-                  state.name = 'Espírito Santo';
-                  break;
-                case 33:
-                  state.name = 'Rio de Janeiro';
-                  break;
-                case 35:
-                  state.name = 'São Paulo';
-                  break;
-                case 41:
-                  state.name = 'Paraná';
-                  break;
-                case 42:
-                  state.name = 'Santa Catarina';
-                  break;
-                case 43:
-                  state.name = 'Rio Grande do Sul';
-                  break;
-                case 50:
-                  state.name = 'Mato Grosso do Sul';
-                  break;
-                case 51:
-                  state.name = 'Mato Grosso';
-                  break;
-                case 52:
-                  state.name = 'Goiás';
-                  break;
-                case 53:
-                  state.name = 'Distrito Federal';
-                  break;
-              }
-              if(!state.hasOwnProperty('deaths')){
-                state.deaths = 0;
-              }
-      
-              if(!state.hasOwnProperty('cases')){
-                state.cases = 0;
-              }    
-              
-              if(!state.hasOwnProperty('suspects')){
-                state.suspects = 0;
-              }   
-      
-              if(!state.hasOwnProperty('refuses')){
-                state.refuses = 0;
-              }                
-            });
-  
-            data.values.sort(function(a,b) {
-              if(a.name < b.name) { return -1 }
-              if(a.name > b.name) { return 1 }
-            })          
-  
-            this.locates = data
-            this.locatesFiltred = data.values
-          }else{
-            this.alert.create({
-              header: "Atenção",
-              message: "É necessário conexão com Internet",
-              buttons: ['OK']
-            }).then((a)=>{ a.present() })            
-          }
+  getLocates() {
+    this.storage.get('brazil')
+      .then((storage) => {
+        if(storage != null){
+          this.locates = storage
+          this.locatesFiltred = storage.regiao
+        }else{
+          this.alert.create({
+            header: "Atenção",
+            message: "Verifique sua conexão com a Internet"
+          }).then(a=> a.present())
         }
-      )
-  } 
+      })
+  }
 
   clearLocates() {
     this.locatesFiltred = null;
@@ -170,40 +70,75 @@ export class Tab1Page implements OnInit {
   }
 
   searchLocates(ev: any) {
-    this.locatesFiltred = null;
+    if (ev.target.value != '') {
+      let response = []
+      let locates = this.locatesFiltred
 
-    if(ev.target.value != ''){
-      let locates = []
-      this.locatesFiltred.forEach((locate)=>{
-        if(this.removeAcentos(locate.name).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1){
-          locates.push(locate)
+      locates.forEach((locate,i) => {
+        if (this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1) {
+          response.push(locate)
+        }else{
+          locate.estados = locate.estados.filter((estado)=>{
+            return this.removeAcentos(estado.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
+          })
+          response.push(locate)
         }
       })
 
-      if(locates.length > 0)
-        this.locatesFiltred = locates
+      if (response.length > 0)
+        this.locatesFiltred = response.filter((r) => { return r.estados.length > 0 })
       else
-        this.locatesFiltred = this.locates.values 
+        this.getLocates()
 
-    }else{
-      this.locatesFiltred = this.locates.values
+    } else {
+      this.getLocates()
     }
-    this.locatesFiltred = null
   }
 
-  removeAcentos(string){
-    var map={"â":"a","Â":"A","à":"a","À":"A","á":"a","Á":"A","ã":"a","Ã":"A","ê":"e","Ê":"E","è":"e","È":"E","é":"e","É":"E","î":"i","Î":"I","ì":"i","Ì":"I","í":"i","Í":"I","õ":"o","Õ":"O","ô":"o","Ô":"O","ò":"o","Ò":"O","ó":"o","Ó":"O","ü":"u","Ü":"U","û":"u","Û":"U","ú":"u","Ú":"U","ù":"u","Ù":"U","ç":"c","Ç":"C"};
-    return string.replace(/[\W\[\] ]/g,function(a){return map[a]||a})    
-  }    
+  removeAcentos(string) {
+    var map = { "â": "a", "Â": "A", "à": "a", "À": "A", "á": "a", "Á": "A", "ã": "a", "Ã": "A", "ê": "e", "Ê": "E", "è": "e", "È": "E", "é": "e", "É": "E", "î": "i", "Î": "I", "ì": "i", "Ì": "I", "í": "i", "Í": "I", "õ": "o", "Õ": "O", "ô": "o", "Ô": "O", "ò": "o", "Ò": "O", "ó": "o", "Ó": "O", "ü": "u", "Ü": "U", "û": "u", "Û": "U", "ú": "u", "Ú": "U", "ù": "u", "Ù": "U", "ç": "c", "Ç": "C" };
+    return string.replace(/[\W\[\] ]/g, function (a) { return map[a] || a })
+  }
 
-  openDetails(locate)
-  {
+  openDetails(locate) {
     let navigation: NavigationExtras = {
       state: {
-        locate: locate,
-        type: 'brazil'
+        locate: locate
       }
     }
-    this.router.navigateByUrl('detail',navigation)
+    this.router.navigateByUrl('detail/brazil', navigation)
+  }
+
+  openSelectOrdenar()
+  {
+    this.select.open();
+  }  
+
+  sortData(event: any)
+  {
+    const index = event.target.value.split("-")[0]
+    const order = event.target.value.split("-")[1]
+
+    this.locatesFiltred.sort(function(a,b) {
+      if(order == "crescente"){
+        if (a.properties[index] < b.properties[index]) { return -1 }
+        if (a.properties[index] > b.properties[index]) { return 1 }
+      }else{
+        if (a.properties[index] < b.properties[index]) { return 1 }
+        if (a.properties[index] > b.properties[index]) { return -1 }          
+      }
+    })
+
+    this.locatesFiltred.forEach(regiao => {
+      regiao.estados.sort((a,b)=> {
+        if(order == "crescente"){
+          if (a.properties[index] < b.properties[index]) { return -1 }
+          if (a.properties[index] > b.properties[index]) { return 1 }
+        }else{
+          if (a.properties[index] < b.properties[index]) { return 1 }
+          if (a.properties[index] > b.properties[index]) { return -1 }          
+        }        
+      })
+    });
   }
 }

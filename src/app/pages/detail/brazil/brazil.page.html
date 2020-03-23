@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title slot="start">{{ locate.name }}</ion-title>
+    <ion-title slot="start">{{ locate.properties.estado_geo }}</ion-title>
     <ion-buttons slot="end">
       <ion-button ion-button (click)="setRouter()">
         <ion-icon name="close-outline"></ion-icon>
@@ -17,7 +17,7 @@
         <ion-card color="warning">
           <ion-card-header>
             <ion-card-subtitle>Casos Suspeitos</ion-card-subtitle>
-            <ion-card-title>{{ locate.suspects }}</ion-card-title>
+            <ion-card-title>{{ locate.properties.casossuspeitos }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
@@ -25,7 +25,7 @@
         <ion-card color="success">
           <ion-card-header>
             <ion-card-subtitle>Casos Descartados</ion-card-subtitle>
-            <ion-card-title>{{ locate.refuses }}</ion-card-title>
+            <ion-card-title>{{ locate.properties.casosdescartados }}</ion-card-title>
           </ion-card-header>
         </ion-card>        
       </ion-col>
@@ -33,7 +33,7 @@
         <ion-card color="danger">
           <ion-card-header>
             <ion-card-subtitle>Casos Confirmados</ion-card-subtitle>
-            <ion-card-title>{{ locate?.cases }}</ion-card-title>
+            <ion-card-title>{{ locate.properties.casosconfirmados }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
@@ -41,14 +41,14 @@
         <ion-card color="dark">
           <ion-card-header>
             <ion-card-subtitle>Mortes Confirmadas</ion-card-subtitle>
-            <ion-card-title>{{ locate.deaths }}</ion-card-title>
+            <ion-card-title>{{ locate.properties.obitos }}</ion-card-title>
           </ion-card-header>
         </ion-card>        
       </ion-col>      
-      <ion-col size="12">
+      <ion-col size="12" class="ion-text-center ion-align-items-center ion-justify-content-center">
         <div id="barChart"></div>
       </ion-col>      
-      <ion-col size="12">
+      <ion-col size="12" class="ion-text-center ion-align-items-center ion-justify-content-center">
         <div id="barChart2"></div>
       </ion-col>        
     </ion-row>
