@@ -1,1 +1,1 @@
-web: ionic serve --prod --no-livereload --no-open --port 80
+web: npm run build && npm start
