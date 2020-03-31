@@ -30,55 +30,41 @@ export class ApiService {
         .subscribe(
           (data: any) => {
 
-            let organizate = []
-            let state = []
-
+            let estados = []
+            
             let brasilcasosconfirmados = 0
             let brasilcasosdescartados = 0
             let brasilcasossuspeitos = 0
-            let brasilobitos = 0            
+            let brasilobitos = 0
 
             data.forEach(e => {
-              if (e.properties.local == "-") {
-                state.sort(function (a, b) {
-                  if (a.properties.estado_geo < b.properties.estado_geo) { return -1 }
-                  if (a.properties.estado_geo > b.properties.estado_geo) { return 1 }
-                })                
+              if(e.properties.estado_geo != "Brasil"){
+                if(!e.properties.hasOwnProperty('casosconfirmados')){
+                  e.properties.casosconfirmados=0
+                }
+                if(!e.properties.hasOwnProperty('casosdescartados')){
+                  e.properties.casosdescartados=0
+                }
+                if(!e.properties.hasOwnProperty('casossuspeitos')){
+                  e.properties.casossuspeitos=0
+                }
+                if(!e.properties.hasOwnProperty('obitos')){
+                  e.properties.obitos=0
+                }
+  
+                brasilcasosconfirmados += e.properties.casosconfirmados
+                brasilcasosdescartados += e.properties.casosdescartados
+                brasilcasossuspeitos += e.properties.casossuspeitos
+                brasilobitos += e.properties.obitos
 
-                //correçao de calculo da api para casos confirmados por regiao
-                let casosconfirmados = 0
-                let casosdescartados = 0
-                let casossuspeitos = 0
-                let obitos = 0
-                state.forEach(s => {
-                  casosconfirmados += s.properties.casosconfirmados
-                  casosdescartados += s.properties.casosdescartados
-                  casossuspeitos += s.properties.casossuspeitos
-                  obitos += s.properties.obitos
-
-                  brasilcasosconfirmados += s.properties.casosconfirmados
-                  brasilcasosdescartados += s.properties.casosdescartados
-                  brasilcasossuspeitos += s.properties.casossuspeitos
-                  brasilobitos += s.properties.obitos                  
-                })
-
-                //aplicando a Correcao
-                e.properties.casosconfirmados = casosconfirmados
-                e.properties.casosdescartados = casosdescartados
-                e.properties.casossuspeitos = casossuspeitos
-                e.properties.obitos = obitos                
-
-                //digo que essa regiao tem esses estados
-                e.estados = state
-
-                if(e.properties.estado_geo != "Brasil")
-                  organizate.push(e)
-
-                state = []
-              } else {
-                state.push(e)
+                estados.push(e)
               }
             });
+
+            estados.sort(function(a,b) {
+              if (a.properties.estado_geo < b.properties.estado_geo) { return -1 }
+              if (a.properties.estado_geo > b.properties.estado_geo) { return 1 }
+            })            
 
             let response = {
               geral: {
@@ -87,8 +73,9 @@ export class ApiService {
                 casossuspeitos:brasilcasossuspeitos,
                 obitos:brasilobitos
               },
-              regiao: organizate
+              estados: estados
             }
+            
             resolve(this.storage.set("brazil", response))
           },
           (err) => {

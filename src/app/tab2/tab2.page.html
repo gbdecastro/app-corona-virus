@@ -37,7 +37,7 @@
   </div>
 
   <!-- Acesso Rápido -->
-  <ion-searchbar animated placeholder="Acesso Rápido" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
+  <ion-searchbar animated placeholder="País: Ex.: US, Italy, Spain, Germany" (ionClear)="clearLocates()" (ionInput)="searchLocates($event)"></ion-searchbar>
 
   <!-- Skeleton Text -->
   <ion-list *ngIf="locatesFiltred == null">

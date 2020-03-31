@@ -33,63 +33,6 @@ export class BrazilPage implements OnInit {
 
     const w = this.platform.width() - 30
 
-    HighCharts.chart("barChart", {
-      chart: {
-        type: "bar",
-        width: w
-      },
-      title: {
-        text: "Suspeitos x Descartados"
-      },
-      xAxis: {
-        visible: false,
-        categories: ["Corona Vírus"]
-      },
-      credits: {
-        enabled: false
-      },
-      yAxis: {
-        visible: false,
-        title: {
-          text: "Valores"
-        }
-      },
-      legend: {
-        enabled: false
-      },
-      plotOptions: {
-        series: {
-          dataLabels: {
-            enabled: true,
-            formatter: function () {
-              return this.y.toFixed(2) + "%";
-            }
-          }
-        }
-      },
-      responsive: {
-        rules: [{
-          condition: {
-            maxWidth: w
-          },
-        }]
-      },
-      series: [
-        {
-          type: undefined,
-          name: "Casos Suspeitos",
-          color: '#ffc409',
-          data: [this.locate.properties.taxacasossuspeitos]
-        },
-        {
-          type: undefined,
-          name: "Casos Descartados",
-          color: '#2dd36f',
-          data: [this.locate.properties.taxacasosdescartados]
-        }
-      ]
-    });
-
     HighCharts.chart("barChart2", {
       chart: {
         type: "bar",

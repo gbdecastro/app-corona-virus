@@ -62,7 +62,7 @@ export class Tab1Page implements OnInit {
       .then((storage) => {
         if(storage != null){
           this.locates = storage
-          this.locatesFiltred = storage.regiao
+          this.locatesFiltred = storage.estados
 
           let event =  {
             target: {
@@ -90,19 +90,14 @@ export class Tab1Page implements OnInit {
       let response = []
       let locates = this.locatesFiltred
 
-      locates.forEach((locate,i) => {
+      locates.forEach((locate) => {
         if (this.removeAcentos(locate.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1) {
-          response.push(locate)
-        }else{
-          locate.estados = locate.estados.filter((estado)=>{
-            return this.removeAcentos(estado.properties.estado_geo).toString().toLowerCase().indexOf(this.removeAcentos(ev.target.value).toString().toLowerCase()) > -1
-          })
           response.push(locate)
         }
       })
 
       if (response.length > 0){
-        this.locatesFiltred = response.filter((r) => { return r.estados.length > 0 })
+        this.locatesFiltred = response
         let event =  {
           target: {
             value: this.select.value
@@ -141,6 +136,7 @@ export class Tab1Page implements OnInit {
     const index = event.target.value.split("-")[0]
     const order = event.target.value.split("-")[1]
 
+
     this.locatesFiltred.sort(function(a,b) {
       if(order == "crescente"){
         if (a.properties[index] < b.properties[index]) { return -1 }
@@ -150,17 +146,5 @@ export class Tab1Page implements OnInit {
         if (a.properties[index] > b.properties[index]) { return -1 }          
       }
     })
-
-    this.locatesFiltred.forEach(regiao => {
-      regiao.estados.sort((a,b)=> {
-        if(order == "crescente"){
-          if (a.properties[index] < b.properties[index]) { return -1 }
-          if (a.properties[index] > b.properties[index]) { return 1 }
-        }else{
-          if (a.properties[index] < b.properties[index]) { return 1 }
-          if (a.properties[index] > b.properties[index]) { return -1 }          
-        }        
-      })
-    });
   }
 }
